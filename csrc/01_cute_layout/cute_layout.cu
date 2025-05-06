@@ -9,7 +9,6 @@ void LearnMakeLayout() {
   auto a = Layout<_1, _0>{};
 }
 
-
 // Reference: https://zhuanlan.zhihu.com/p/28356098779
 void LearnLayoutComposition() {
   /* 
@@ -269,11 +268,61 @@ void LearnLayoutComposition() {
     std::cout << "a: " << a << ", b: " << b << ", result: " << result << std::endl;
   }
   // It seems that Layout A will try to fit B
+  /*
+  * Reshape a layout into a matrix
+  */
+  {
+    std::cout << "========== reshape a layout into a matrix ==========" << std::endl;
+    auto a = Layout<Int<20>, _2>{};
+    auto b = Layout<Shape<_5, _4>, Stride<_4, _1>>{};
+    auto result = composition(a, b);
+    std::cout << "a: " << a << ", b: " << b << ", result: " << result << std::endl;
+  }
+}
+
+void LearnLayoutComplement() {
+  {
+    auto a = Layout<_1, _0>{};
+    auto result = complement(a);
+    std::cout << "a: " << a << ", result: " << result << std::endl;
+  }
+  {
+    auto a = Layout<_1, _0>{};
+    auto result = complement(a, Int<2>{});
+    std::cout << "a: " << a << ", result: " << result << std::endl;
+  }
+  {
+    auto a = Layout<Shape<_2, _2>, Stride<_1, _6>>{};
+    auto result = complement(a, Int<24>{});
+    std::cout << "a: " << a << ", result: " << result << std::endl;
+    print_layout(a);
+    print_layout(result);
+  }
+}
+
+void LearnLayoutDivide() {
+  {
+    auto a = Layout<Shape<_4,_2,_3>, Stride<_2,_1,_8>>{};
+    auto b = Layout<_4, _2>{};
+    auto result = logical_divide(a, b);
+    std::cout << "a: " << a << ", b: " << b << ", result: " << result << std::endl;
+    print_layout(result);
+  }
+  // Example from https://zhuanlan.zhihu.com/p/662089556
+  {
+    auto a = Layout<Shape<_4,_6>, Stride<_6,_1>>{};
+    auto b = Layout<Shape<_2,_2>, Stride<_2,_1>>{};
+    auto result = logical_divide(a, b);
+    std::cout << "a: " << a << ", b: " << b << ", result: " << result << std::endl;
+    print_layout(result);
+  }
 }
 
 int main() {
-  LearnMakeLayout();
-  LearnLayoutComposition();
+  // LearnMakeLayout();
+  // LearnLayoutComposition();
+  // LearnLayoutComplement();
+  LearnLayoutDivide();
   std::cout << "done" << std::endl;
   return 0;
 }
